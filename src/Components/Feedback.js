@@ -8,9 +8,9 @@ export default function Feedback() {
   const [neutral, setNeutral] = useState(0);
   const [bad, setBad] = useState(0);
 
-  const onLeaveFeedback = e => {
-    const name = e.target.name;
-    console.log(e);
+  const options = { good, neutral, bad };
+
+  const onLeaveFeedback = name => {
     switch (name) {
       case 'good':
         setGood(prevState => prevState + 1);
@@ -29,14 +29,18 @@ export default function Feedback() {
     }
   };
 
-  const countTotalFeedback = () => {
-    const total = good + neutral + bad;
+  const countTotalFeedback = state => {
+    const values = Object.values(state);
+    let total = 0;
+    for (let value of values) {
+      total = total + value;
+    }
     return total;
   };
 
-  const countPositiveFeedbackPercentage = () => {
+  const countPositiveFeedbackPercentage = state => {
     let a = good;
-    let total = countTotalFeedback;
+    let total = countTotalFeedback(state);
     let b = (a * 100) / total;
     return b;
   };
@@ -44,76 +48,17 @@ export default function Feedback() {
   return (
     <div>
       <Section title="Please leave feedback">
-        <FeedbackOptions
-          key={[good, neutral, bad]}
-          onLeaveFeedback={onLeaveFeedback}
-          options={[good, neutral, bad]}
-        />
+        <FeedbackOptions onLeaveFeedback={onLeaveFeedback} options={Object.keys(options)} />
       </Section>
       <Section title="Statistics">
         <Statistics
           good={good}
           neutral={neutral}
           bad={bad}
-          total={countTotalFeedback}
-          positivePercentage={countPositiveFeedbackPercentage}
+          total={countTotalFeedback(options)}
+          positivePercentage={countPositiveFeedbackPercentage(options)}
         />
       </Section>
     </div>
   );
 }
-
-// class Feedback extends React.Component {
-//   state = {
-//     good: 0,
-//     neutral: 0,
-//     bad: 0,
-//   };
-
-//   onLeaveFeedback = e => {
-//     const name = e.target.name;
-//     this.setState(prevState => ({
-//       [name]: prevState[name] + 1,
-//     }));
-//   };
-
-//   countTotalFeedback = state => {
-//     const values = Object.values(state);
-//     let total = 0;
-//     for (let value of values) {
-//       total = total + value;
-//     }
-//     return total;
-//   };
-
-//   countPositiveFeedbackPercentage = state => {
-//     let a = this.state.good;
-//     let total = this.countTotalFeedback(state);
-//     let b = (a * 100) / total;
-//     return b;
-//   };
-
-//   render() {
-//     return (
-//       <div>
-//         <Section title="Please leave feedback">
-//           <FeedbackOptions
-//             key={Object.keys(this.state)}
-//             onLeaveFeedback={this.onLeaveFeedback}
-//             options={Object.keys(this.state)}
-//           />
-//         </Section>
-//         <Section title="Statistics">
-//           <Statistics
-//             good={this.state.good}
-//             neutral={this.state.neutral}
-//             bad={this.state.bad}
-//             total={this.countTotalFeedback(this.state)}
-//             positivePercentage={this.countPositiveFeedbackPercentage(this.state)}
-//           />
-//         </Section>
-//       </div>
-//     );
-//   }
-// }
-// export default Feedback;

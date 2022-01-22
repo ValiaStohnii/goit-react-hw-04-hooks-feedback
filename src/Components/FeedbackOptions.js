@@ -3,11 +3,10 @@ import PropTypes from 'prop-types';
 import { nanoid } from 'nanoid';
 
 const FeedbackOptions = ({ onLeaveFeedback, options }) => {
-  console.log(options);
   return (
     <div>
       {options.map(option => (
-        <button key={nanoid()} type="button" name={option} onClick={onLeaveFeedback}>
+        <button key={nanoid()} type="button" name={option} onClick={() => onLeaveFeedback(option)}>
           {option}
         </button>
       ))}
